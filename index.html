@@ -319,6 +319,26 @@ button.row:active,.group button:active{background:var(--sunk)}
 .taglist .add{display:inline-flex;align-items:center;gap:4px;padding:0 12px;height:38px;border-radius:13px;border:1.5px dashed var(--line2);color:var(--ink2)}
 .taglist .add input{border:0;background:transparent;width:66px;font-size:13px;font-weight:800}
 .hint{font-size:11.5px;font-weight:600;color:var(--ink3);line-height:1.6}
+.addbtn{
+  height:52px;padding:0 20px;border-radius:15px;flex:none;
+  background:var(--accent-soft);color:var(--accent-ink);font-size:14.5px;font-weight:800;
+  display:flex;align-items:center;justify-content:center
+}
+.suprow{display:flex;align-items:center;gap:8px}
+.suprow .del{
+  width:46px;height:46px;border-radius:14px;flex:none;background:var(--field);color:var(--ink2);
+  display:flex;align-items:center;justify-content:center
+}
+.quick{display:flex;flex-wrap:wrap;gap:7px}
+.quick button{
+  padding:9px 13px;border-radius:13px;background:var(--field);color:var(--ink2);
+  font-size:13px;font-weight:800;display:inline-flex;align-items:center;gap:5px
+}
+.chip-add{
+  padding:8px 12px;border-radius:12px;font-size:12.5px;font-weight:800;
+  background:transparent;border:1.5px dashed var(--line2);color:var(--ink2);
+  min-height:38px;display:inline-flex;align-items:center;gap:4px
+}
 .ride{
   flex:1 1 auto;min-width:0;background:var(--sunk);border-radius:17px;padding:12px 15px;
   display:flex;align-items:center;gap:10px
@@ -534,6 +554,17 @@ button.row:active,.group button:active{background:var(--sunk)}
     return S.d.classes.filter(function (c) { return c.days.indexOf(n) >= 0; })
       .sort(function (a, b) { return mn(tS(a, n)) - mn(tS(b, n)); });
   }
+  var COMMON = ['물통', '실내화', '간식', '우산', '마스크', '여벌 옷', '교재', '숙제 노트',
+    '필통', '색연필', '악보', '연습장', '알림장', '수건'];
+  function suggestions(exclude) {
+    var seen = {}, out = [];
+    (exclude || []).forEach(function (x) { seen[x] = 1; });
+    S.d.classes.forEach(function (c) {
+      (c.supplies || []).forEach(function (x) { if (!seen[x]) { seen[x] = 1; out.push(x); } });
+    });
+    COMMON.forEach(function (x) { if (!seen[x]) { seen[x] = 1; out.push(x); } });
+    return out.slice(0, 10);
+  }
   function rides() { return S.d.rides || (S.d.rides = []); }
   function ridesOn(d) {
     var n = dw(d);
@@ -713,6 +744,8 @@ button.row:active,.group button:active{background:var(--sunk)}
             + tISO + '" data-c="' + c.id + '" data-s="' + esc(s) + '">'
             + '<span class="mk">' + ic('check', 10, 3.4) + '</span>' + esc(s) + '</button>';
         }).join('');
+        chips += '<button class="chip-add" data-act="edit-sup" data-id="' + c.id + '" aria-label="준비물 추가·수정">'
+          + ic('plus', 13, 2.6) + ((c.supplies || []).length ? '' : '준비물') + '</button>';
         o += '<div class="sched"><div class="sched-t num' + (on ? ' on' : '') + '">' + esc(tS(c, nD)) + '</div>'
           + '<div class="sched-c' + (on ? ' on' : '') + '" style="border-left-color:' + cv(c.color, 'b') + '">'
           + '<div style="display:flex;align-items:center;gap:9px">'
@@ -968,8 +1001,13 @@ button.row:active,.group button:active{background:var(--sunk)}
             + '<span class="chk" aria-hidden="true" aria-checked="' + on + '"><i>' + ic('check', 14, 3.2) + '</i></span>'
             + '<span class="grow row-t">' + esc(s) + '</span></button>';
         });
+        o += '<button class="row" data-act="edit-sup" data-id="' + c.id + '" style="min-height:48px">'
+          + '<span style="color:var(--ink2);display:flex;flex:none">' + ic('edit', 18) + '</span>'
+          + '<span class="grow row-t" style="font-size:13px;color:var(--ink2)">준비물 추가 · 수정</span>'
+          + ic('right', 15, 2.4) + '</button>';
       } else {
-        o += '<button class="row" data-act="edit-class" data-id="' + c.id + '">'
+        o += '<button class="row" data-act="edit-sup" data-id="' + c.id + '">'
+          + '<span style="color:var(--accent-ink);display:flex;flex:none">' + ic('plus', 19, 2.3) + '</span>'
           + '<span class="grow row-t" style="color:var(--accent-ink);font-size:13.5px">준비물 추가하기</span>'
           + ic('right', 15, 2.4) + '</button>';
       }
@@ -1129,6 +1167,13 @@ button.row:active,.group button:active{background:var(--sunk)}
     S.draft = { title: t.title, cid: t.cid || '', due: t.due || iso(new Date()), done: !!t.done, at: t.at || 0 };
     renderSheet();
   }
+  function openSupplies(cid) {
+    var c = byId(cid);
+    if (!c) return;
+    S.sheet = { k: 'sup', id: cid }; S.confirm = null;
+    S.draft = { items: (c.supplies || []).slice() };
+    renderSheet();
+  }
   function openRide(id) {
     var r = id ? rideById(id) : null;
     S.sheet = { k: 'ride', id: id || null }; S.confirm = null;
@@ -1154,6 +1199,11 @@ button.row:active,.group button:active{background:var(--sunk)}
     Array.prototype.forEach.call(el.querySelectorAll('[data-f]'), function (f) {
       S.draft[f.getAttribute('data-f')] = f.value;
     });
+    var si = el.querySelectorAll('[data-si]');
+    if (si.length) {
+      S.draft.items = [];
+      Array.prototype.forEach.call(si, function (f) { S.draft.items.push(f.value); });
+    }
     var pd = el.querySelectorAll('[data-pd]');
     if (pd.length) {
       if (!S.draft.times) S.draft.times = {};
@@ -1210,13 +1260,15 @@ button.row:active,.group button:active{background:var(--sunk)}
         + '<span class="l">요일마다 시간이 달라요</span>'
         + '<span class="sw" aria-hidden="true" aria-checked="' + d.perDay + '"><i></i></span></button>';
       o += '</div>';
-      o += '<div class="fld"><label>매번 챙길 준비물</label><div class="taglist">'
-        + d.supplies.map(function (s, i) {
-          return '<span class="del" style="' + catS(d.color) + '">' + esc(s)
-            + '<button data-act="sup-del" data-i="' + i + '" aria-label="' + esc(s) + ' 삭제">' + ic('x', 12, 2.8) + '</button></span>';
-        }).join('')
-        + '<span class="add"><input type="text" id="f-sup" placeholder="추가" aria-label="준비물 추가" enterkeyhint="done">'
-        + '<button data-act="sup-new" aria-label="준비물 추가">' + ic('plus', 14, 2.6) + '</button></span></div></div>';
+      o += '<div class="fld"><label>매번 챙길 준비물<em>' + d.supplies.length + '개</em></label>'
+        + (d.supplies.length ? '<div class="taglist" style="margin-bottom:4px">'
+          + d.supplies.map(function (s, i) {
+            return '<span class="del" style="' + catS(d.color) + '">' + esc(s)
+              + '<button data-act="sup-del" data-i="' + i + '" aria-label="' + esc(s) + ' 삭제">' + ic('x', 12, 2.8) + '</button></span>';
+          }).join('') + '</div>' : '')
+        + '<div class="inp-row">'
+        + '<input class="inp" id="f-sup" type="text" placeholder="준비물 이름" aria-label="준비물 추가" enterkeyhint="done">'
+        + '<button class="addbtn" data-act="sup-new">추가</button></div></div>';
       o += '<div class="fld"><label>장소 · 선생님<em>선택</em></label><div class="inp-row">'
         + '<input class="inp" type="text" value="' + esc(d.place) + '" placeholder="3층 / 셔틀" data-f="place" aria-label="장소">'
         + '<input class="inp" type="text" value="' + esc(d.teacher) + '" placeholder="선생님" data-f="teacher" aria-label="선생님"></div></div>';
@@ -1231,6 +1283,40 @@ button.row:active,.group button:active{background:var(--sunk)}
             + '<button class="btn btn-q btn-d" data-act="class-del">정말 삭제</button></div>'
           : '<button class="btn btn-q" data-act="ask-del" data-k="class">' + ic('trash', 16, 2) + '이 학원 삭제</button>') : '')
         + '</div>';
+
+    } else if (S.sheet.k === 'sup') {
+      var sc = byId(S.sheet.id) || { name: '', color: 'c1' };
+      o += '<div class="sh-hd">'
+        + '<span class="ini lg" style="' + catS(sc.color) + '">' + esc(ini(sc.name)) + '</span>'
+        + '<h2>' + esc(shortName(sc.name)) + ' 준비물</h2>'
+        + '<button class="sh-x" data-act="close" aria-label="닫기">' + ic('x', 17, 2.4) + '</button></div>';
+      o += '<div class="sh-body">';
+      o += '<div class="fld"><label>챙길 물건<em>' + d.items.length + '개</em></label>';
+      if (d.items.length) {
+        o += d.items.map(function (v, i) {
+          return '<div class="suprow" style="margin-bottom:8px">'
+            + '<input class="inp" type="text" value="' + esc(v) + '" data-si="' + i + '" aria-label="준비물 ' + (i + 1) + '">'
+            + '<button class="del" data-act="sup2-del" data-i="' + i + '" aria-label="삭제">' + ic('trash', 18, 2) + '</button>'
+            + '</div>';
+        }).join('');
+      } else {
+        o += '<div class="hint" style="padding:6px 2px">아직 등록한 준비물이 없어요. 아래에서 추가해 주세요.</div>';
+      }
+      o += '</div>';
+      o += '<div class="fld"><label for="f-supnew">새 준비물 추가</label><div class="inp-row">'
+        + '<input class="inp" id="f-supnew" type="text" placeholder="예: 물통" aria-label="새 준비물" enterkeyhint="done">'
+        + '<button class="addbtn" data-act="sup2-new">추가</button></div></div>';
+      var sug = suggestions(d.items);
+      if (sug.length) {
+        o += '<div class="fld"><label>자주 쓰는 것<em>눌러서 바로 추가</em></label><div class="quick">'
+          + sug.map(function (x) {
+            return '<button data-act="sup2-quick" data-v="' + esc(x) + '">' + ic('plus', 13, 2.6) + esc(x) + '</button>';
+          }).join('') + '</div></div>';
+      }
+      o += '<div class="hint">여기서 바꾸면 매주 같은 요일마다 이 목록으로 나옵니다. '
+        + '이미 체크해 둔 기록은 그대로 남아요.</div>';
+      o += '<div class="sp-8"></div></div>';
+      o += '<div class="sh-foot"><button class="btn btn-p" data-act="sup2-save">저장</button></div>';
 
     } else if (S.sheet.k === 'ride') {
       o += '<div class="sh-hd"><h2>' + (S.sheet.id ? '차량 수정' : '차량 추가') + '</h2>'
@@ -1301,6 +1387,14 @@ button.row:active,.group button:active{background:var(--sunk)}
           return '<button class="row" data-act="edit-class" data-id="' + c.id + '">'
             + '<span class="ini" style="' + catS(c.color) + '">' + esc(ini(c.name)) + '</span>'
             + '<span class="grow row-t">' + esc(c.name) + '</span>' + ic('right', 15, 2.4) + '</button>';
+        }).join('') + '</div></div>';
+      o += '<div class="fld"><label>준비물 관리<em>학원별로 편집</em></label><div class="group" style="margin:0">'
+        + classes().map(function (c) {
+          return '<button class="row" data-act="edit-sup" data-id="' + c.id + '">'
+            + '<span class="ini" style="' + catS(c.color) + '">' + esc(ini(c.name)) + '</span>'
+            + '<span class="grow"><span class="row-t" style="display:block">' + esc(shortName(c.name)) + '</span>'
+            + '<span class="row-s">' + ((c.supplies || []).length ? esc((c.supplies || []).join(', ')) : '준비물 없음') + '</span></span>'
+            + ic('right', 15, 2.4) + '</button>';
         }).join('') + '</div></div>';
       o += '<div class="fld"><label>이동 · 차량<em>' + rides().length + '개</em></label>'
         + '<div class="group" style="margin:0">'
@@ -1382,6 +1476,33 @@ button.row:active,.group button:active{background:var(--sunk)}
     if (a === 'new-class') { openClass(null); return; }
     if (a === 'edit-class') { openClass(t.getAttribute('data-id')); return; }
     if (a === 'edit-todo') { openTodo(t.getAttribute('data-id')); return; }
+    if (a === 'edit-sup') { openSupplies(t.getAttribute('data-id')); return; }
+    if (a === 'sup2-del') { S.draft.items.splice(+t.getAttribute('data-i'), 1); renderSheet(); return; }
+    if (a === 'sup2-new') {
+      var ni = document.getElementById('f-supnew'), nv = (ni && ni.value || '').trim();
+      if (!nv) { if (ni) ni.focus(); return; }
+      if (S.draft.items.indexOf(nv) < 0) S.draft.items.push(nv); else toast('이미 있어요');
+      renderSheet();
+      var ni2 = document.getElementById('f-supnew'); if (ni2) ni2.focus();
+      return;
+    }
+    if (a === 'sup2-quick') {
+      var qv = t.getAttribute('data-v');
+      if (S.draft.items.indexOf(qv) < 0) S.draft.items.push(qv);
+      renderSheet(); return;
+    }
+    if (a === 'sup2-save') {
+      var scid = S.sheet.id;
+      var list = S.draft.items.map(function (x) { return String(x).trim(); })
+        .filter(function (x, i, arr) { return x && arr.indexOf(x) === i; });
+      S.d.classes = S.d.classes.map(function (c) {
+        if (c.id !== scid) return c;
+        var n = {}; Object.keys(c).forEach(function (k) { n[k] = c[k]; });
+        n.supplies = list; return n;
+      });
+      save(); closeSheet(); render(); toast('준비물을 저장했어요');
+      return;
+    }
     if (a === 'new-ride') { openRide(null); return; }
     if (a === 'edit-ride') { openRide(t.getAttribute('data-id')); return; }
     if (a === 'ride-kind') { S.draft.kind = t.getAttribute('data-k'); renderSheet(); return; }
@@ -1576,6 +1697,7 @@ button.row:active,.group button:active{background:var(--sunk)}
     var id = ev.target && ev.target.id;
     if (id === 'ti') { ev.preventDefault(); var b = document.querySelector('[data-act="todo-add"]'); if (b) b.click(); }
     if (id === 'f-sup') { ev.preventDefault(); var b2 = document.querySelector('[data-act="sup-new"]'); if (b2) b2.click(); }
+    if (id === 'f-supnew') { ev.preventDefault(); var b3 = document.querySelector('[data-act="sup2-new"]'); if (b3) b3.click(); }
   });
 
   /* 좌우 스와이프로 탭 이동 */
