@@ -319,6 +319,46 @@ button.row:active,.group button:active{background:var(--sunk)}
 .taglist .add{display:inline-flex;align-items:center;gap:4px;padding:0 12px;height:38px;border-radius:13px;border:1.5px dashed var(--line2);color:var(--ink2)}
 .taglist .add input{border:0;background:transparent;width:66px;font-size:13px;font-weight:800}
 .hint{font-size:11.5px;font-weight:600;color:var(--ink3);line-height:1.6}
+/* ---------- 사진 아바타 ---------- */
+.av{overflow:hidden;padding:0}
+.av img{width:100%;height:100%;object-fit:cover;display:block}
+.photo-lg{width:88px;height:88px;border-radius:30px;overflow:hidden;flex:none;background:var(--c1);
+  display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:800;color:var(--c1i)}
+.photo-lg img{width:100%;height:100%;object-fit:cover;display:block}
+
+/* ---------- 아이 화면 ---------- */
+#kids{position:fixed;inset:0;z-index:70;background:var(--bg);display:none;flex-direction:column;
+  max-width:440px;margin:0 auto}
+#kids.on{display:flex}
+.k-top{flex:none;display:flex;align-items:center;gap:14px;
+  padding:calc(env(safe-area-inset-top) + 16px) 20px 14px}
+.k-name{font-size:25px;font-weight:800;letter-spacing:-.03em;line-height:1.2}
+.k-sub{font-size:14px;font-weight:700;color:var(--ink2);margin-top:4px}
+.k-out{width:44px;height:44px;border-radius:15px;flex:none;background:var(--sunk);color:var(--ink2);
+  display:flex;align-items:center;justify-content:center}
+.k-stars{flex:none;display:flex;gap:7px;padding:0 20px 16px;flex-wrap:wrap}
+.k-stars i{width:26px;height:26px;display:block;color:var(--line2)}
+.k-stars i.on{color:var(--accent)}
+.k-list{flex:1 1 auto;overflow-y:auto;padding:0 20px calc(env(safe-area-inset-bottom) + 24px);
+  display:flex;flex-direction:column;gap:13px}
+.k-item{display:flex;align-items:center;gap:16px;padding:18px 20px;border-radius:26px;
+  min-height:98px;background:var(--card);box-shadow:var(--sh);width:100%;text-align:left}
+.k-item .kbox{width:54px;height:54px;border-radius:19px;flex:none;border:3px solid var(--line2);
+  display:flex;align-items:center;justify-content:center;color:transparent;background:transparent}
+.k-item .kt{font-size:21px;font-weight:800;letter-spacing:-.02em;flex:1 1 auto;word-break:break-word}
+.k-item .kc{font-size:12.5px;font-weight:700;margin-top:5px;display:inline-block;padding:3px 9px;border-radius:9px}
+.k-item.on{box-shadow:none}
+.k-item.on .kbox{border-color:transparent}
+.k-done{flex:1 1 auto;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:16px;padding:0 28px calc(env(safe-area-inset-bottom) + 24px);text-align:center}
+.k-done .big{font-size:28px;font-weight:800;letter-spacing:-.03em}
+.k-done .sm{font-size:15px;font-weight:700;color:var(--ink2);line-height:1.6}
+.k-stamp{width:140px;height:140px;border-radius:70px;background:var(--accent-soft);color:var(--accent);
+  display:flex;align-items:center;justify-content:center}
+
+/* ---------- 카드 미리보기 ---------- */
+.cardwrap{border-radius:20px;overflow:hidden;background:var(--sunk);box-shadow:var(--sh)}
+.cardwrap img{width:100%;display:block}
 .addbtn{
   height:52px;padding:0 20px;border-radius:15px;flex:none;
   background:var(--accent-soft);color:var(--accent-ink);font-size:14.5px;font-weight:800;
@@ -364,6 +404,7 @@ button.row:active,.group button:active{background:var(--sunk)}
   <div id="dock"></div>
   <nav id="tabs" aria-label="주요 화면"></nav>
 </div>
+<div id="kids" role="dialog" aria-modal="true" aria-label="아이 화면"></div>
 <div id="sheetwrap"><div id="scrim" data-act="close"></div><div id="sheet" class="sheet" role="dialog" aria-modal="true"></div></div>
 
 <script>
@@ -391,6 +432,9 @@ button.row:active,.group button:active{background:var(--sunk)}
     people:'<circle cx="9.2" cy="8.4" r="3.2"/><path d="M3.6 20c0-3.2 2.5-5.2 5.6-5.2s5.6 2 5.6 5.2"/><path d="M16.2 5.6a3.2 3.2 0 0 1 0 5.7M17.8 20c0-2.3-.8-3.9-2-4.8"/>',
     refresh:'<path d="M4 12a8 8 0 0 1 13.6-5.7L20 8.5"/><path d="M20 4v4.5h-4.5"/><path d="M20 12a8 8 0 0 1-13.6 5.7L4 15.5"/><path d="M4 20v-4.5h4.5"/>',
     edit:'<path d="M15.2 4.6l4.2 4.2M4.4 19.6l1-4.2L16 4.8a1.6 1.6 0 0 1 2.3 0l1 1a1.6 1.6 0 0 1 0 2.3L8.6 18.6z"/>',
+    star:'<path d="M12 3.6l2.6 5.4 5.9.8-4.3 4.1 1.1 5.9L12 17l-5.3 2.8 1.1-5.9-4.3-4.1 5.9-.8z"/>',
+    card:'<rect x="3.2" y="5" width="17.6" height="14" rx="3.2"/><path d="M3.2 9.6h17.6"/><path d="M7 14h5"/>',
+    camera:'<path d="M3.4 8.6a2 2 0 0 1 2-2h1.9l1.3-2h6.8l1.3 2h1.9a2 2 0 0 1 2 2v8.2a2 2 0 0 1-2 2H5.4a2 2 0 0 1-2-2z"/><circle cx="12" cy="12.6" r="3.4"/>',
     bus:'<rect x="3.6" y="4.4" width="16.8" height="11.6" rx="2.8"/><path d="M3.6 10.4h16.8"/><path d="M7.4 13.4h.6M16 13.4h.6"/><path d="M6.8 16v2.2M17.2 16v2.2"/>',
     board:'<path d="M12 20V6"/><path d="M7.6 10.4 12 6l4.4 4.4"/>',
     home2:'<path d="M12 6v14"/><path d="M7.6 15.6 12 20l4.4-4.4"/>'
@@ -448,7 +492,7 @@ button.row:active,.group button:active{background:var(--sunk)}
   /* ==================== 데이터 ==================== */
   function seed() {
     return {
-      config: { name: '혜원', age: 7 },
+      config: { name: '혜원', age: 7, photo: '', guardian: '' },
       classes: [
         {
           id: 'eng', name: '영어 · 잉글리시아이', color: 'c3', place: '효곡점', teacher: '',
@@ -479,14 +523,14 @@ button.row:active,.group button:active{background:var(--sunk)}
         { id: 'r4', label: '잉글리시아이 차량', days: [2, 3, 5], time: '17:50', kind: 'back' }
       ],
       todos: [],
-      checks: {}, pays: {}
+      checks: {}, pays: {}, stamps: {}
     };
   }
 
   var S = {
     d: null, view: 'today', todoTab: 'today',
     supDate: iso(new Date()), month: mkey(new Date()),
-    sheet: null, draft: null, confirm: null
+    sheet: null, draft: null, confirm: null, kids: false, cardUrl: '', cardName: ''
   };
 
   function load() {
@@ -505,8 +549,11 @@ button.row:active,.group button:active{background:var(--sunk)}
       rides: Array.isArray(o.rides) ? o.rides : [],
       todos: Array.isArray(o.todos) ? o.todos : [],
       checks: (o.checks && typeof o.checks === 'object') ? o.checks : {},
-      pays: (o.pays && typeof o.pays === 'object') ? o.pays : {}
+      pays: (o.pays && typeof o.pays === 'object') ? o.pays : {},
+      stamps: (o.stamps && typeof o.stamps === 'object') ? o.stamps : {}
     };
+    d.config.photo = d.config.photo || '';
+    d.config.guardian = d.config.guardian || '';
     d.classes.forEach(function (c) {
       if (!c.id) c.id = uid();
       if (COL.indexOf(c.color) < 0) c.color = 'c1';
@@ -564,6 +611,22 @@ button.row:active,.group button:active{background:var(--sunk)}
     });
     COMMON.forEach(function (x) { if (!seen[x]) { seen[x] = 1; out.push(x); } });
     return out.slice(0, 10);
+  }
+  function avatar(cls, attrs) {
+    var nm = String(S.d.config.name || '아이').slice(0, 2);
+    if (S.d.config.photo) {
+      return '<span class="' + cls + '" ' + (attrs || '') + '><img src="' + S.d.config.photo + '" alt=""></span>';
+    }
+    return '<span class="' + cls + '" ' + (attrs || '') + '>' + esc(nm) + '</span>';
+  }
+  function stamps() { return S.d.stamps || (S.d.stamps = {}); }
+  function updateStamp(dISO) {
+    var st = stats(fromISO(dISO));
+    if (st.total > 0 && st.left.length === 0) stamps()[dISO] = true;
+    else delete stamps()[dISO];
+  }
+  function stampsInMonth(mk) {
+    return Object.keys(stamps()).filter(function (k) { return k.indexOf(mk) === 0; }).length;
   }
   function rides() { return S.d.rides || (S.d.rides = []); }
   function ridesOn(d) {
@@ -654,7 +717,9 @@ button.row:active,.group button:active{background:var(--sunk)}
     var o = '';
 
     o += '<div class="hd">'
-      + '<button class="av" data-act="settings" aria-label="설정">' + esc(String(S.d.config.name || '아이').slice(0, 2)) + '</button>'
+      + '<button class="av" data-act="settings" aria-label="설정" style="padding:0">'
+      + (S.d.config.photo ? '<img src="' + S.d.config.photo + '" alt="">' : esc(String(S.d.config.name || '아이').slice(0, 2)))
+      + '</button>'
       + '<div class="grow"><div class="hd-eb">' + (now.getMonth() + 1) + '월 ' + now.getDate() + '일 ' + DAY[dw(now)] + '요일</div>'
       + '<div class="hd-t">' + (tc.length ? '오늘 학원 ' + tc.length + '곳' : '오늘은 학원이 없어요') + '</div></div>'
       + '<button class="ico" data-act="settings" aria-label="설정">' + ic('gear', 20) + '</button></div>';
@@ -716,6 +781,17 @@ button.row:active,.group button:active{background:var(--sunk)}
         + '<div style="font-size:11.5px;font-weight:600;color:var(--accent-ink);opacity:.8;margin-top:4px">'
         + esc(tS(nx, nD) + ' ~ ' + tE(nx, nD)) + (supLeft.length ? ' · ' + supLeft.join(', ') + ' 챙기기' : ' · 준비 완료')
         + '</div></div></div>';
+    }
+
+    // 아이가 직접 챙기기
+    if (st.total) {
+      o += '<button class="group" style="display:block;width:calc(100% - 36px);margin-bottom:16px" data-act="kids-on">'
+        + '<span class="row" style="min-height:64px">' + avatar('ini lg', 'style="border-radius:14px"')
+        + '<span class="grow"><span class="row-t" style="display:block">'
+        + esc(S.d.config.name || '아이') + '이가 직접 챙기기</span>'
+        + '<span class="row-s">큰 글씨 화면으로 넘겨 주세요 · '
+        + (st.total - st.done) + '개 남음</span></span>'
+        + '<span style="color:var(--accent-ink);display:flex;flex:none">' + ic('right', 17, 2.4) + '</span></span></button>';
     }
 
     // 오늘 일정 (학원 + 차량을 시간순으로)
@@ -792,6 +868,15 @@ button.row:active,.group button:active{background:var(--sunk)}
         + '<span class="row-s">' + esc(tmrC.map(function (c) { return shortName(c.name); }).join(', ')) + '</span></span>'
         + ic('right', 15, 2.4) + '</button></div>';
     }
+    var mk = mkey(now), nSt = stampsInMonth(mk);
+    o += '<div class="sp-24"></div>' + sect('스스로 챙긴 날', now.getMonth() + 1 + '월');
+    o += '<div class="group"><button class="row" data-act="growth-card">'
+      + '<span style="color:' + (nSt ? 'var(--accent)' : 'var(--ink3)') + ';display:flex;flex:none">'
+      + '<svg width="21" height="21" viewBox="0 0 24 24" fill="currentColor">' + P.star + '</svg></span>'
+      + '<span class="grow"><span class="row-t" style="display:block">'
+      + (nSt ? '이번 달 도장 ' + nSt + '개' : '아직 도장이 없어요') + '</span>'
+      + '<span class="row-s">' + (nSt ? '눌러서 성장 카드 만들기' : '준비물을 다 챙긴 날 도장이 찍혀요') + '</span></span>'
+      + ic('right', 15, 2.4) + '</button></div>';
     o += '<div style="height:84px"></div>';
     return o;
   }
@@ -1111,6 +1196,63 @@ button.row:active,.group button:active{background:var(--sunk)}
     return o;
   }
 
+  /* ==================== 아이 화면 ==================== */
+  function renderKids() {
+    var el = document.getElementById('kids');
+    if (!S.kids) { el.classList.remove('on'); el.innerHTML = ''; return; }
+    var now = new Date(), tISO = iso(now), nD = dw(now);
+    var items = [];
+    onDay(now).forEach(function (c) {
+      (c.supplies || []).forEach(function (sname) {
+        items.push({ c: c, s: sname, on: isCk(tISO, c.id, sname) });
+      });
+    });
+    var doneN = items.filter(function (x) { return x.on; }).length;
+    var allDone = items.length > 0 && doneN === items.length;
+    var nm = esc(S.d.config.name || '아이');
+
+    var o = '<div class="k-top">' + avatar('photo-lg')
+      + '<div class="grow"><div class="k-name">' + nm + '아,</div>'
+      + '<div class="k-sub">' + (items.length
+        ? (allDone ? '오늘 다 챙겼어요!' : '오늘 챙길 것 ' + items.length + '개')
+        : '오늘은 챙길 게 없어요') + '</div></div>'
+      + '<button class="k-out" data-act="kids-off" aria-label="엄마 화면으로">' + ic('x', 20, 2.3) + '</button></div>';
+
+    if (items.length) {
+      o += '<div class="k-stars" aria-hidden="true">' + items.map(function (x) {
+        return '<i class="' + (x.on ? 'on' : '') + '">'
+          + '<svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor">' + P.star + '</svg></i>';
+      }).join('') + '</div>';
+    }
+
+    if (allDone) {
+      o += '<div class="k-done">'
+        + '<div class="k-stamp"><svg width="78" height="78" viewBox="0 0 24 24" fill="currentColor">' + P.star + '</svg></div>'
+        + '<div class="big">' + nm + '이 최고!</div>'
+        + '<div class="sm">오늘 준비물 ' + items.length + '개를<br>스스로 다 챙겼어요</div>'
+        + '<button class="btn btn-p" style="max-width:260px;margin-top:6px" data-act="kids-off">다 했어요</button>'
+        + '</div>';
+    } else if (!items.length) {
+      o += '<div class="k-done"><div class="big">오늘은 쉬는 날</div>'
+        + '<div class="sm">챙길 준비물이 없어요</div>'
+        + '<button class="btn btn-q" style="max-width:220px" data-act="kids-off">돌아가기</button></div>';
+    } else {
+      o += '<div class="k-list">' + items.map(function (x) {
+        var st = x.on ? catS(x.c.color) : '';
+        return '<button class="k-item' + (x.on ? ' on' : '') + '" style="' + st + '" role="checkbox" aria-checked="' + x.on
+          + '" data-act="ksup" data-c="' + x.c.id + '" data-s="' + esc(x.s) + '">'
+          + '<span class="kbox" style="' + (x.on ? 'background:' + cv(x.c.color, 'i') + ';color:' + cv(x.c) + ';' : '') + '">'
+          + ic('check', 30, 3.4) + '</span>'
+          + '<span class="grow"><span class="kt" style="display:block">' + esc(x.s) + '</span>'
+          + '<span class="kc" style="' + (x.on ? 'background:rgba(255,255,255,.45);color:' + cv(x.c.color, 'i')
+            : catS(x.c.color)) + '">' + esc(shortName(x.c.name)) + '</span></span>'
+          + '</button>';
+      }).join('') + '</div>';
+    }
+    el.innerHTML = o;
+    el.classList.add('on');
+  }
+
   /* ==================== 하단 ==================== */
   function renderDock() {
     var el = document.getElementById('dock'), o = '';
@@ -1184,7 +1326,7 @@ button.row:active,.group button:active{background:var(--sunk)}
   }
   function openSettings() {
     S.sheet = { k: 'set' }; S.confirm = null;
-    S.draft = { name: S.d.config.name || '', age: S.d.config.age || '' };
+    S.draft = { name: S.d.config.name || '', age: S.d.config.age || '', guardian: S.d.config.guardian || '' };
     renderSheet();
   }
   function closeSheet() {
@@ -1284,6 +1426,16 @@ button.row:active,.group button:active{background:var(--sunk)}
           : '<button class="btn btn-q" data-act="ask-del" data-k="class">' + ic('trash', 16, 2) + '이 학원 삭제</button>') : '')
         + '</div>';
 
+    } else if (S.sheet.k === 'card') {
+      o += '<div class="sh-hd"><h2>' + esc(S.cardName) + '</h2>'
+        + '<button class="sh-x" data-act="close" aria-label="닫기">' + ic('x', 17, 2.4) + '</button></div>';
+      o += '<div class="sh-body">'
+        + '<div class="cardwrap"><img src="' + S.cardUrl + '" alt="' + esc(S.cardName) + '"></div>'
+        + '<div class="hint">이미지를 <b>길게 눌러</b> 사진첩에 저장하거나, 아래 버튼으로 저장·공유하세요.</div>'
+        + '<div class="sp-8"></div></div>';
+      o += '<div class="sh-foot"><button class="btn btn-p" data-act="card-save">'
+        + ic('down', 18, 2.1) + '저장 · 공유</button></div>';
+
     } else if (S.sheet.k === 'sup') {
       var sc = byId(S.sheet.id) || { name: '', color: 'c1' };
       o += '<div class="sh-hd">'
@@ -1376,6 +1528,14 @@ button.row:active,.group button:active{background:var(--sunk)}
       o += '<div class="sh-hd"><h2>설정</h2>'
         + '<button class="sh-x" data-act="close" aria-label="닫기">' + ic('x', 17, 2.4) + '</button></div>';
       o += '<div class="sh-body">';
+      o += '<div class="fld"><label>아이 사진<em>이 폰에만 저장돼요</em></label>'
+        + '<div style="display:flex;align-items:center;gap:14px">' + avatar('photo-lg')
+        + '<div class="grow" style="display:flex;flex-direction:column;gap:8px">'
+        + '<button class="btn btn-q" style="height:44px" data-act="photo-pick">' + ic('camera', 17, 1.9)
+        + (S.d.config.photo ? '사진 바꾸기' : '사진 넣기') + '</button>'
+        + (S.d.config.photo ? '<button class="btn btn-q" style="height:40px;font-size:13px" data-act="photo-del">사진 지우기</button>' : '')
+        + '</div></div>'
+        + '<div class="hint">인터넷에 올라가지 않습니다. 링크를 받은 사람도 볼 수 없어요.</div></div>';
       o += '<div class="fld"><label>아이 이름 · 나이</label><div class="inp-row">'
         + '<input class="inp" type="text" value="' + esc(d.name) + '" placeholder="예: 혜원" data-f="name" aria-label="아이 이름">'
         + '<input class="inp num" type="number" inputmode="numeric" min="1" max="19" value="' + esc(d.age) + '" data-f="age" aria-label="나이" style="max-width:96px"></div></div>';
@@ -1388,6 +1548,20 @@ button.row:active,.group button:active{background:var(--sunk)}
             + '<span class="ini" style="' + catS(c.color) + '">' + esc(ini(c.name)) + '</span>'
             + '<span class="grow row-t">' + esc(c.name) + '</span>' + ic('right', 15, 2.4) + '</button>';
         }).join('') + '</div></div>';
+      o += '<div class="fld"><label for="f-guard">보호자 연락처<em>정보 카드에 들어가요</em></label>'
+        + '<input class="inp" id="f-guard" type="text" value="' + esc(d.guardian || '') + '" '
+        + 'placeholder="예: 엄마 010-0000-0000" data-f="guardian"></div>';
+      o += '<div class="fld"><label>카드 만들기<em>이미지로 저장</em></label><div class="group" style="margin:0">'
+        + '<button class="row" data-act="growth-card">'
+        + '<span style="color:var(--accent);display:flex;flex:none">'
+        + '<svg width="19" height="19" viewBox="0 0 24 24" fill="currentColor">' + P.star + '</svg></span>'
+        + '<span class="grow"><span class="row-t" style="display:block">이번 달 성장 카드</span>'
+        + '<span class="row-s">스스로 챙긴 날을 달력에 도장으로</span></span>' + ic('right', 15, 2.4) + '</button>'
+        + '<button class="row" data-act="info-card">'
+        + '<span style="color:var(--ink2);display:flex;flex:none">' + ic('card', 19) + '</span>'
+        + '<span class="grow"><span class="row-t" style="display:block">우리 아이 정보 카드</span>'
+        + '<span class="row-s">학원·차량·연락처를 한 장으로</span></span>' + ic('right', 15, 2.4) + '</button>'
+        + '</div></div>';
       o += '<div class="fld"><label>준비물 관리<em>학원별로 편집</em></label><div class="group" style="margin:0">'
         + classes().map(function (c) {
           return '<button class="row" data-act="edit-sup" data-id="' + c.id + '">'
@@ -1458,7 +1632,7 @@ button.row:active,.group button:active{background:var(--sunk)}
     else o = vToday();
     sc.innerHTML = o;
     sc.scrollTop = y;
-    renderDock(); renderTabs();
+    renderDock(); renderTabs(); renderKids();
   }
 
   /* ==================== 동작 ==================== */
@@ -1471,6 +1645,17 @@ button.row:active,.group button:active{background:var(--sunk)}
     if (S.sheet && S.draft && a !== 'close') readFields();
 
     if (a === 'tab') { S.view = t.getAttribute('data-v'); render(); return; }
+    if (a === 'kids-on') { S.kids = true; renderKids(); return; }
+    if (a === 'kids-off') { S.kids = false; renderKids(); render(true); return; }
+    if (a === 'ksup') {
+      var kISO = iso(new Date()), kc = t.getAttribute('data-c'), ks = t.getAttribute('data-s');
+      var kbox = ck(kISO), kk = kc + '::' + ks;
+      var was = !!kbox[kk];
+      if (was) delete kbox[kk]; else kbox[kk] = true;
+      updateStamp(kISO);
+      save(); renderKids();
+      return;
+    }
     if (a === 'close') { closeSheet(); return; }
     if (a === 'settings') { openSettings(); return; }
     if (a === 'new-class') { openClass(null); return; }
@@ -1538,11 +1723,13 @@ button.row:active,.group button:active{background:var(--sunk)}
       var dISO = t.getAttribute('data-d'), cid = t.getAttribute('data-c'), s = t.getAttribute('data-s');
       var box = ck(dISO), k = cid + '::' + s;
       if (box[k]) delete box[k]; else box[k] = true;
+      updateStamp(dISO);
       save(); render(true); return;
     }
     if (a === 'sup-all') {
       var dd = t.getAttribute('data-d'), box2 = ck(dd);
       stats(fromISO(dd)).left.forEach(function (x) { box2[x.c.id + '::' + x.s] = true; });
+      updateStamp(dd);
       save(); render(true); toast('모두 챙겼어요'); return;
     }
     if (a === 'sup-shift') {
@@ -1673,7 +1860,12 @@ button.row:active,.group button:active{background:var(--sunk)}
       save(); closeSheet(); render(); toast('삭제했어요'); return;
     }
     if (a === 'set-save') {
-      S.d.config = { name: String(S.draft.name || '').trim() || '아이', age: Number(S.draft.age) || '' };
+      S.d.config = {
+        name: String(S.draft.name || '').trim() || '아이',
+        age: Number(S.draft.age) || '',
+        photo: S.d.config.photo || '',
+        guardian: String(S.draft.guardian || '').trim()
+      };
       save(); closeSheet(); render(); toast('저장했어요'); return;
     }
     if (a === 'prune') {
@@ -1681,6 +1873,11 @@ button.row:active,.group button:active{background:var(--sunk)}
       Object.keys(S.d.checks).forEach(function (k) { if (k < cut) { delete S.d.checks[k]; removed++; } });
       save(); renderSheet(); toast(removed + '일치 정리했어요'); return;
     }
+    if (a === 'photo-pick') { pickPhoto(); return; }
+    if (a === 'photo-del') { S.d.config.photo = ''; save(); renderSheet(); render(true); toast('사진을 지웠어요'); return; }
+    if (a === 'growth-card') { showCard(growthCard, '성장 카드'); return; }
+    if (a === 'info-card') { showCard(infoCard, '우리 아이 정보'); return; }
+    if (a === 'card-save') { saveCard(); return; }
     if (a === 'backup') { doBackup(); return; }
     if (a === 'restore') { doRestore(); return; }
   });
@@ -1692,6 +1889,7 @@ button.row:active,.group button:active{background:var(--sunk)}
   });
 
   document.addEventListener('keydown', function (ev) {
+    if (ev.key === 'Escape' && S.kids) { S.kids = false; renderKids(); render(true); return; }
     if (ev.key === 'Escape' && S.sheet) { closeSheet(); return; }
     if (ev.key !== 'Enter') return;
     var id = ev.target && ev.target.id;
@@ -1719,6 +1917,241 @@ button.row:active,.group button:active{background:var(--sunk)}
       S.view = ORDER[n]; render();
     }, { passive: true });
   })();
+
+  /* ==================== 사진 ==================== */
+  function pickPhoto() {
+    var inp = document.createElement('input');
+    inp.type = 'file'; inp.accept = 'image/*';
+    inp.onchange = function () {
+      var f = inp.files && inp.files[0]; if (!f) return;
+      var fr = new FileReader();
+      fr.onload = function () {
+        var im = new Image();
+        im.onload = function () {
+          var N = 320, cv = document.createElement('canvas');
+          cv.width = N; cv.height = N;
+          var g = cv.getContext('2d');
+          g.fillStyle = '#FFFFFF'; g.fillRect(0, 0, N, N);
+          var m = Math.min(im.width, im.height);
+          g.drawImage(im, (im.width - m) / 2, (im.height - m) / 2, m, m, 0, 0, N, N);
+          S.d.config.photo = cv.toDataURL('image/jpeg', 0.82);
+          save();
+          if (saveWarn) { S.d.config.photo = ''; save(); toast('사진이 너무 커요. 다른 사진을 써 주세요'); }
+          else toast('사진을 넣었어요');
+          renderSheet(); render(true);
+        };
+        im.onerror = function () { toast('사진을 읽지 못했어요'); };
+        im.src = String(fr.result);
+      };
+      fr.readAsDataURL(f);
+    };
+    inp.click();
+  }
+
+  /* ==================== 카드 만들기 ==================== */
+  var HEX = {
+    c1: ['#DCD6F2', '#584AA3'], c2: ['#C7E8DB', '#22624F'], c3: ['#CDE3F5', '#275F85'],
+    c4: ['#FBE6AE', '#775700'], c5: ['#FFD8C6', '#8A3A1E'], c6: ['#F8D2DD', '#9D3A5F']
+  };
+  var K_BG = '#FBF7F2', K_CARD = '#FFFFFF', K_INK = '#332D2A', K_INK2 = '#6F655D',
+    K_INK3 = '#A2978E', K_ACC = '#DE6B50', K_ACCI = '#8A3A1E', K_ACCS = '#FFD9C7',
+    K_LINE = '#EFE8E0', K_SUNK = '#F5F1EA';
+  function hx(c, i) { return (HEX[c] || HEX.c1)[i]; }
+
+  function rr(g, x, y, w, h, r) {
+    if (g.roundRect) { g.beginPath(); g.roundRect(x, y, w, h, r); return; }
+    g.beginPath(); g.moveTo(x + r, y);
+    g.arcTo(x + w, y, x + w, y + h, r); g.arcTo(x + w, y + h, x, y + h, r);
+    g.arcTo(x, y + h, x, y, r); g.arcTo(x, y, x + w, y, r); g.closePath();
+  }
+  function fillRR(g, x, y, w, h, r, color) { rr(g, x, y, w, h, r); g.fillStyle = color; g.fill(); }
+  function tx(g, str, x, y, size, weight, color, align) {
+    g.font = weight + ' ' + size + 'px "Gothic A1", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif';
+    g.fillStyle = color; g.textAlign = align || 'left'; g.textBaseline = 'alphabetic';
+    g.fillText(str, x, y);
+  }
+  function ensureFonts() {
+    if (!document.fonts || !document.fonts.load) return Promise.resolve();
+    return Promise.all([
+      document.fonts.load('800 60px "Gothic A1"'),
+      document.fonts.load('700 32px "Gothic A1"'),
+      document.fonts.load('600 26px "Gothic A1"')
+    ]).then(function () { return document.fonts.ready; }).catch(function () {});
+  }
+  function loadImg(src) {
+    return new Promise(function (res, rej) {
+      var im = new Image(); im.onload = function () { res(im); }; im.onerror = rej; im.src = src;
+    });
+  }
+  function photoOrNull() {
+    return S.d.config.photo ? loadImg(S.d.config.photo).catch(function () { return null; })
+      : Promise.resolve(null);
+  }
+  function circleImg(g, im, cx, cy, r) {
+    if (im) {
+      g.save(); g.beginPath(); g.arc(cx, cy, r, 0, Math.PI * 2); g.clip();
+      var m = Math.min(im.width, im.height);
+      g.drawImage(im, (im.width - m) / 2, (im.height - m) / 2, m, m, cx - r, cy - r, r * 2, r * 2);
+      g.restore();
+    } else {
+      g.beginPath(); g.arc(cx, cy, r, 0, Math.PI * 2); g.fillStyle = hx('c1', 0); g.fill();
+      tx(g, String(S.d.config.name || '아이').slice(0, 2), cx, cy + r * 0.32, r * 0.8, '800', hx('c1', 1), 'center');
+    }
+    g.beginPath(); g.arc(cx, cy, r, 0, Math.PI * 2);
+    g.lineWidth = 8; g.strokeStyle = K_CARD; g.stroke();
+  }
+  function star(g, cx, cy, r, color) {
+    g.save(); g.translate(cx, cy); g.scale(r / 12, r / 12); g.fillStyle = color;
+    var pth = new Path2D('M12 3.6l2.6 5.4 5.9.8-4.3 4.1 1.1 5.9L12 17l-5.3 2.8 1.1-5.9-4.3-4.1 5.9-.8z');
+    g.translate(-12, -12); g.fill(pth); g.restore();
+  }
+
+  function growthCard() {
+    var W = 1080, H = 1350, now = new Date(), mk = mkey(now);
+    var n = stampsInMonth(mk), nm = String(S.d.config.name || '아이');
+    return ensureFonts().then(photoOrNull).then(function (im) {
+      var cv = document.createElement('canvas'); cv.width = W; cv.height = H;
+      var g = cv.getContext('2d');
+      g.fillStyle = K_BG; g.fillRect(0, 0, W, H);
+
+      circleImg(g, im, W / 2, 208, 104);
+      tx(g, nm, W / 2, 372, 54, '800', K_INK, 'center');
+      tx(g, (now.getMonth() + 1) + '월에 스스로 챙긴 날', W / 2, 424, 30, '700', K_INK2, 'center');
+
+      g.font = '700 132px "Baloo 2", "Gothic A1", sans-serif';
+      var numW = g.measureText(String(n)).width;
+      g.textAlign = 'left'; g.fillStyle = K_ACC;
+      var totalW = numW + 14 + 52;
+      g.fillText(String(n), (W - totalW) / 2, 566);
+      tx(g, '일', (W - totalW) / 2 + numW + 14, 566, 46, '800', K_ACCI, 'left');
+
+      // 달력 (그 달에 필요한 줄 수만큼만)
+      var cx0 = 108, cyTop = 640, cw = 120, ch = 78;
+      var firstD = new Date(now.getFullYear(), now.getMonth(), 1);
+      var lastD = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
+      var rowsUsed = 1;
+      for (var q = 2; q <= lastD; q++) {
+        if (dw(new Date(now.getFullYear(), now.getMonth(), q)) === 1) rowsUsed++;
+      }
+      var calH = 40 + rowsUsed * ch + 30;
+      fillRR(g, 72, cyTop - 34, W - 144, calH, 40, K_CARD);
+      var dn = ['월', '화', '수', '목', '금', '토', '일'];
+      for (var i = 0; i < 7; i++) {
+        tx(g, dn[i], cx0 + i * cw + cw / 2, cyTop + 30, 24, '700', i >= 5 ? K_INK3 : K_INK2, 'center');
+      }
+      var row = 0;
+      for (var d = 1; d <= lastD; d++) {
+        var dt = new Date(now.getFullYear(), now.getMonth(), d);
+        var col = dw(dt) - 1;
+        if (d > 1 && col === 0) row++;
+        var ccx = cx0 + col * cw + cw / 2, ccy = cyTop + 76 + row * ch;
+        var on = !!stamps()[iso(dt)];
+        g.beginPath(); g.arc(ccx, ccy, 28, 0, Math.PI * 2);
+        g.fillStyle = on ? K_ACC : K_SUNK; g.fill();
+        tx(g, String(d), ccx, ccy + 10, 24, on ? '800' : '600', on ? '#FFFFFF' : K_INK3, 'center');
+        if (on) star(g, ccx + 22, ccy - 22, 13, K_ACCI);
+      }
+
+      // 학원
+      var cl = classes(), py = cyTop - 34 + calH + 74;
+      tx(g, '다니는 학원', 108, py, 26, '800', K_INK2, 'left');
+      var bx = 108;
+      cl.forEach(function (c) {
+        var label = shortName(c.name);
+        g.font = '800 27px "Gothic A1", sans-serif';
+        var wdt = g.measureText(label).width + 44;
+        fillRR(g, bx, py + 26, wdt, 58, 20, hx(c.color, 0));
+        tx(g, label, bx + wdt / 2, py + 65, 27, '800', hx(c.color, 1), 'center');
+        bx += wdt + 14;
+      });
+
+      tx(g, '학원노트', W / 2, H - 56, 24, '700', K_INK3, 'center');
+      return cv;
+    });
+  }
+
+  function infoCard() {
+    var W = 1080, H = 1350, nm = String(S.d.config.name || '아이');
+    var cl = classes().slice(0, 6), rl = rides().slice().sort(function (a, b) {
+      return (a.days[0] || 9) - (b.days[0] || 9) || (a.time ? mn(a.time) : -1) - (b.time ? mn(b.time) : -1);
+    }).slice(0, 6);
+    return ensureFonts().then(photoOrNull).then(function (im) {
+      var cv = document.createElement('canvas'); cv.width = W; cv.height = H;
+      var g = cv.getContext('2d');
+      g.fillStyle = K_BG; g.fillRect(0, 0, W, H);
+
+      circleImg(g, im, 190, 190, 92);
+      tx(g, '우리 아이 정보', 316, 156, 26, '800', K_INK3, 'left');
+      tx(g, nm + (S.d.config.age ? ' · ' + S.d.config.age + '세' : ''), 316, 224, 52, '800', K_INK, 'left');
+
+      var y = 316;
+      // 학원
+      var chH = 58 + cl.length * 104;
+      fillRR(g, 72, y, W - 144, chH, 40, K_CARD);
+      tx(g, '학원', 120, y + 58, 27, '800', K_INK2, 'left');
+      cl.forEach(function (c, i) {
+        var ly = y + 112 + i * 104;
+        fillRR(g, 120, ly - 34, 56, 56, 18, hx(c.color, 0));
+        tx(g, ini(c.name), 148, ly + 6, 27, '800', hx(c.color, 1), 'center');
+        tx(g, c.name, 196, ly - 4, 30, '800', K_INK, 'left');
+        tx(g, timeText(c) + (c.place ? '  ·  ' + c.place : ''), 196, ly + 36, 23, '600', K_INK2, 'left');
+      });
+      y += chH + 30;
+
+      // 차량
+      var rhH = 58 + Math.max(1, rl.length) * 72;
+      fillRR(g, 72, y, W - 144, rhH, 40, K_CARD);
+      tx(g, '이동 · 차량', 120, y + 58, 27, '800', K_INK2, 'left');
+      if (rl.length) {
+        rl.forEach(function (r, i) {
+          var ly = y + 110 + i * 72;
+          tx(g, (r.time || '--:--'), 120, ly, 27, '700', K_ACCI, 'left');
+          tx(g, r.label, 250, ly, 27, '800', K_INK, 'left');
+          tx(g, r.days.map(function (d2) { return DAY[d2]; }).join('·') + ' · ' + (r.kind === 'back' ? '하원' : '탑승'),
+            W - 120, ly, 23, '700', K_INK2, 'right');
+        });
+      } else {
+        tx(g, '등록된 차량이 없어요', 120, y + 110, 25, '600', K_INK3, 'left');
+      }
+      y += rhH + 30;
+
+      // 연락처
+      var gd = String(S.d.config.guardian || '').trim();
+      fillRR(g, 72, y, W - 144, 148, 40, K_ACCS);
+      tx(g, '보호자 연락처', 120, y + 56, 24, '800', K_ACCI, 'left');
+      tx(g, gd || '설정에서 연락처를 넣어 주세요', 120, y + 112, gd ? 38 : 27, '800', K_ACCI, 'left');
+
+      tx(g, '학원노트', W / 2, H - 56, 24, '700', K_INK3, 'center');
+      return cv;
+    });
+  }
+
+  function showCard(maker, name) {
+    toast('카드를 만드는 중이에요');
+    maker().then(function (cv) {
+      S.cardUrl = cv.toDataURL('image/png');
+      S.cardName = name;
+      S.sheet = { k: 'card' }; S.draft = {}; S.confirm = null;
+      renderSheet();
+    }).catch(function () { toast('카드를 만들지 못했어요'); });
+  }
+
+  function saveCard() {
+    var name = (S.cardName || '학원노트') + '.png';
+    fetch(S.cardUrl).then(function (r) { return r.blob(); }).then(function (blob) {
+      var file = null;
+      try { file = new File([blob], name, { type: 'image/png' }); } catch (e) {}
+      if (file && navigator.canShare && navigator.canShare({ files: [file] })) {
+        navigator.share({ files: [file] }).catch(function () {});
+        return;
+      }
+      var u = URL.createObjectURL(blob);
+      var a = document.createElement('a'); a.href = u; a.download = name;
+      document.body.appendChild(a); a.click();
+      setTimeout(function () { URL.revokeObjectURL(u); a.remove(); }, 1500);
+      toast('저장했어요');
+    }).catch(function () { toast('이미지를 길게 눌러 저장해 주세요'); });
+  }
 
   /* ==================== 백업 / 복원 ==================== */
   function doBackup() {
