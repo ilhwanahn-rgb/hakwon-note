@@ -1,5 +1,5 @@
 /* 학원노트 — 오프라인 캐시 */
-const CACHE = 'hakwon-note-v8';
+const CACHE = 'hakwon-note-v9';
 const ASSETS = [
   './',
   './index.html',
